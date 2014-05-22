@@ -15,7 +15,15 @@ class RSpec::Core::Formatters::LegacyJUnitFormatter < RSpec::Core::Formatters::B
     super
 
     xml.instruct!
-    xml.testsuite :tests => example_count, :failures => failure_count, :errors => 0, :time => '%.6f' % duration, :timestamp => @start.iso8601 do
+    testsuite_options = {
+      :name => 'rspec',
+      :tests => example_count,
+      :failures => failure_count,
+      :errors => 0,
+      :time => '%.6f' % duration,
+      :timestamp => @start.iso8601
+    }
+    xml.testsuite testsuite_options do
       xml.properties
       examples.each do |example|
         send :"dump_summary_example_#{example.execution_result[:status]}", example

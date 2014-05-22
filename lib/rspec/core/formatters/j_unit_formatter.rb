@@ -34,7 +34,15 @@ class RSpec::Core::Formatters::JUnitFormatter < RSpec::Core::Formatters::BaseFor
 
   def dump_summary(summary)
     xml.instruct!
-    xml.testsuite :tests => summary.example_count, :failures => summary.failure_count, :errors => 0, :time => '%.6f' % summary.duration, :timestamp => @start.iso8601 do
+    testsuite_options = {
+      :name => 'rspec',
+      :tests => summary.example_count,
+      :failures => summary.failure_count,
+      :errors => 0,
+      :time => '%.6f' % summary.duration,
+      :timestamp => @start.iso8601
+    }
+    xml.testsuite testsuite_options do
       xml.properties
       @example_notifications.each do |notification|
         send :"dump_summary_example_#{notification.example.execution_result[:status]}", notification
